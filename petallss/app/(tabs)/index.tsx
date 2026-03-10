@@ -1,116 +1,64 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, FlatList, Image } from 'react-native';
-import UniImage from '../../assets/images/BZU-Multan.png'; // adjust path based on your file
+import { SafeAreaView, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
+import { useState } from "react";
+import { useRouter } from "expo-router";
 
-export default function AdmissionForm() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [age, setAge] = useState('');
-  const [admissions, setAdmissions] = useState([]);
+export default function Login() {
 
-  const handleSubmit = () => {
-    if (firstName && lastName && age) {
-      setAdmissions([
-        ...admissions,
-        { firstName, lastName, age, key: Date.now().toString() }
-      ]);
-      setFirstName('');
-      setLastName('');
-      setAge('');
-    } else {
-      alert('Please fill all fields');
-    }
-  };
+  const router = useRouter();
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+
+  if (password.trim() === "") {
+    Alert.alert("Error", "Please enter a password");
+    return;
+  }
+
+  if (password === "1234") {
+    router.push("/home");
+  } else {
+    Alert.alert("Login Failed", "Wrong password");
+  }
+
+};
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled"
-    >
-      {/* University Image at the top */}
-      <Image
-  source={UniImage}
-  style={styles.image}
-  resizeMode="contain"
-/>
+    <SafeAreaView style={styles.container}>
 
-      <Text style={styles.heading}>Admission Form</Text>
+      <Text style={styles.title}>Login</Text>
 
-      {/* Form Inputs */}
       <TextInput
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Age"
-        value={age}
-        onChangeText={(text) => setAge(text.replace(/[^0-9]/g, ''))}
-        keyboardType="numeric"
+        placeholder="Enter Email"
         style={styles.input}
       />
 
-      <Button title="Apply" onPress={handleSubmit} />
-
-      {/* Submitted Data */}
-      <Text style={styles.subHeading}>Submitted Data:</Text>
-      <FlatList
-        data={admissions}
-        renderItem={({ item }) => (
-          <Text style={styles.item}>
-            {item.firstName} {item.lastName}, Age: {item.age}
-          </Text>
-        )}
+      <TextInput
+        placeholder="Enter Password"
+        secureTextEntry
+        style={styles.input}
+        onChangeText={setPassword}
       />
-    </ScrollView>
+
+      <Button title="LOGIN" onPress={handleLogin} />
+
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    justifyContent: "center",
     padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#f0f4f7',
-    flexGrow: 1,
+    backgroundColor: "white"
   },
-  image: {
-    width: '100%',
-    height: 150,
-    marginBottom: 20,
-  },
-  heading: {
+  title: {
     fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  subHeading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 30,
-    marginBottom: 10,
+    marginBottom: 20
   },
   input: {
     borderWidth: 1,
-    borderColor: '#999',
-    padding: 12,
-    marginBottom: 15,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-  item: {
-    fontSize: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    backgroundColor: '#e3e3e3',
-    marginBottom: 8,
-    borderRadius: 6,
-  },
+    padding: 10,
+    marginBottom: 15
+  }
 });
